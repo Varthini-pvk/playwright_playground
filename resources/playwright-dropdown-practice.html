@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Playwright Dropdown Practice - Single Page</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, "Segoe UI", Arial; padding: 24px; line-height: 1.45; }
+    section { border: 1px solid #e5e7eb; padding: 16px; margin-bottom: 18px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    h2 { margin-top: 0; }
+    .row { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .menu { display:none; margin:8px 0; padding:0; list-style:none; border:1px solid #ddd; max-width:320px; }
+    .menu.visible { display:block; }
+    .menu li { padding:8px; cursor:pointer; }
+    .menu li:hover { background:#f3f4f6; }
+    .selected { font-weight:600; color: #0f172a; }
+    .log { background:#111827; color:#f8fafc; padding:8px; border-radius:6px; max-height:120px; overflow:auto; }
+    .virtual-list { height:120px; width:320px; overflow:auto; border:1px solid #ddd; }
+    .virtual-item { height:28px; padding:4px 8px; }
+    .shadow-host { padding:12px; border:1px dashed #cbd5e1; }
+    .note { font-size:13px; color:#374151; }
+  </style>
+</head>
+<body>
+  <h1>Playwright Dropdown Practice — Single Page (All 15 Exercises)</h1>
+  <p class="note">This page intentionally contains native selects, custom dropdowns, searchable inputs, virtualized lists, shadow DOM and an iframe — all instrumented so you can practice Playwright tests locally. Each example has an ID you can target directly.</p>
+
+  <!-- 1 & 2: Native select by value / label -->
+  <section id="ex1-2">
+    <h2>1 &amp; 2 — Native &lt;select&gt; (id=&quot;country&quot;)</h2>
+    <div class="row">
+      <label for="country">Country:</label>
+      <select id="country" aria-label="country-select">
+        <option value="">-- choose --</option>
+        <option value="US">United States</option>
+        <option value="IN">India</option>
+        <option value="GB">United Kingdom</option>
+      </select>
+      <div>Selected: <span id="country-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 3: Custom dropdown (div-based) -->
+  <section id="ex3">
+    <h2>3 — Custom dropdown (div-based) (id=&quot;city-dropdown&quot;)</h2>
+    <div class="row">
+      <div id="city-dropdown" style="padding:8px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;min-width:200px;">Select city</div>
+      <ul id="city-menu" class="menu" role="listbox" aria-labelledby="city-dropdown">
+        <li role="option">Chennai</li>
+        <li role="option">Bengaluru</li>
+        <li role="option">Madurai</li>
+      </ul>
+      <div>Selected: <span id="city-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 4: Multi-select native -->
+  <section id="ex4">
+    <h2>4 — Multi-select &lt;select&gt; (id=&quot;fruits&quot;)</h2>
+    <div class="row">
+      <select id="fruits" multiple size="4">
+        <option value="apple">Apple</option>
+        <option value="mango">Mango</option>
+        <option value="banana">Banana</option>
+        <option value="orange">Orange</option>
+      </select>
+      <div>Selected: <span id="fruits-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 5: Keyboard-select native -->
+  <section id="ex5">
+    <h2>5 — Keyboard navigation on native select (id=&quot;color&quot;)</h2>
+    <div class="row">
+      <select id="color">
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="blue">Blue</option>
+      </select>
+      <div>Selected: <span id="color-selected" class="selected">red</span></div>
+    </div>
+  </section>
+
+  <!-- 6: Dynamically loaded options -->
+  <section id="ex6">
+    <h2>6 — Dynamically-loaded options (simulated API) (id=&quot;district-dropdown&quot;)</h2>
+    <div class="row">
+      <button id="district-dropdown">Load Districts</button>
+      <ul id="district-menu" class="menu" role="listbox"></ul>
+      <div>Selected: <span id="district-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 7: ARIA combobox example -->
+  <section id="ex7">
+    <h2>7 — ARIA combobox (roles) (id=&quot;state-combobox&quot;)</h2>
+    <div class="row">
+      <div role="combobox" aria-expanded="false" id="state-combobox" tabindex="0" style="padding:8px;border:1px solid #cbd5e1;border-radius:6px;min-width:220px;">Select state</div>
+      <ul id="state-options" class="menu" role="listbox" aria-label="states">
+        <li role="option">Kerala</li>
+        <li role="option">Tamil Nadu</li>
+        <li role="option">Karnataka</li>
+      </ul>
+      <div>Selected: <span id="state-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 8: Searchable dropdown -->
+  <section id="ex8">
+    <h2>8 — Searchable dropdown (type then select) (id=&quot;search-city&quot;)</h2>
+    <div class="row">
+      <input id="search-city" placeholder="Type to search cities" />
+      <ul id="search-results" class="menu"></ul>
+      <div>Selected: <span id="search-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 9: Shadow DOM dropdown -->
+  <section id="ex9">
+    <h2>9 — Shadow DOM dropdown (id=&quot;shadow-host&quot;)</h2>
+    <div class="row">
+      <div class="shadow-host" id="shadow-host">Shadow host</div>
+      <div>Selected: <span id="shadow-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 10: Internationalized labels -->
+  <section id="ex10">
+    <h2>10 — Internationalized labels (id=&quot;i18n&quot;)</h2>
+    <div class="row">
+      <select id="i18n">
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+      <div>Selected: <span id="i18n-selected" class="selected">English</span></div>
+    </div>
+  </section>
+
+  <!-- 11: Custom select helper target (exercise to build helper) -->
+  <section id="ex11">
+    <h2>11 — Helper-target dropdown (flaky click scenario) (id=&quot;flaky-dropdown&quot;)</h2>
+    <div class="row">
+      <div id="flaky-dropdown" style="padding:8px;border:1px solid #cbd5e1;border-radius:6px;min-width:200px;cursor:pointer;">Open flaky</div>
+      <ul id="flaky-menu" class="menu">
+        <li>Option A</li>
+        <li>Option B</li>
+      </ul>
+      <div>Selected: <span id="flaky-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 12: ARIA + keyboard checks included above; reuse state-combobox -->
+  <section id="ex12">
+    <h2>12 — Keyboard accessibility checks (use id=&quot;state-combobox&quot; and &quot;color&quot;)</h2>
+    <p class="note">Use the combobox and native select to test aria-expanded, aria-activedescendant, Tab order, Arrow keys, Escape behavior.</p>
+  </section>
+
+  <!-- 13: Analytics / network simulation -->
+  <section id="ex13">
+    <h2>13 — Analytics / network event (simulated) (id=&quot;analytics-dropdown&quot;)</h2>
+    <div class="row">
+      <select id="analytics-dropdown">
+        <option value="a">A</option>
+        <option value="b">B</option>
+        <option value="c">C</option>
+      </select>
+      <div>Last analytics payload: <span id="analytics-last" class="selected">none</span></div>
+    </div>
+    <div style="margin-top:12px">
+      <div>Analytics log (simulated):</div>
+      <div id="analytics-log" class="log"></div>
+    </div>
+  </section>
+
+  <!-- 14: Virtualized list (simple simulation) -->
+  <section id="ex14">
+    <h2>14 — Virtualized/infinite list simulation (id=&quot;virtual-list&quot;)</h2>
+    <div class="row">
+      <div class="virtual-list" id="virtual-list" role="listbox"></div>
+      <div>Selected: <span id="virtual-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- 15: Flaky test demo — delayed rendering -->
+  <section id="ex15">
+    <h2>15 — Flaky element (delayed rendering) (id=&quot;delayed-dropdown&quot;)</h2>
+    <div class="row">
+      <button id="delayed-trigger">Render delayed dropdown</button>
+      <div id="delayed-container"></div>
+      <div>Selected: <span id="delayed-selected" class="selected">none</span></div>
+    </div>
+  </section>
+
+  <!-- iframe example for #9 alternative (inside an iframe) -->
+  <section id="iframe-section">
+    <h2>Iframe example (for exercise 9 iframe variant)</h2>
+    <iframe id="demo-iframe" srcdoc="<select id='frame-select'><option>Alpha</option><option>Beta</option></select>" style="width:420px;height:120px;border:1px solid #ddd"></iframe>
+  </section>
+
+  <script>
+    // Utility: write selected text
+    function setText(id, text) { document.getElementById(id).textContent = text; }
+
+    // 1 & 2: native select
+    document.getElementById('country').addEventListener('change', e => {
+      setText('country-selected', e.target.value || 'none');
+    });
+
+    // 3: custom dropdown behavior
+    const cityDrop = document.getElementById('city-dropdown');
+    const cityMenu = document.getElementById('city-menu');
+    cityDrop.addEventListener('click', () => cityMenu.classList.toggle('visible'));
+    cityMenu.addEventListener('click', e => {
+      if (e.target && e.target.nodeName === 'LI') {
+        setText('city-selected', e.target.textContent);
+        cityMenu.classList.remove('visible');
+        cityDrop.textContent = e.target.textContent;
+      }
+    });
+
+    // 4: multi-select
+    document.getElementById('fruits').addEventListener('change', e => {
+      const selected = Array.from(e.target.selectedOptions).map(o => o.text).join(', ') || 'none';
+      setText('fruits-selected', selected);
+    });
+
+    // 5: keyboard native select
+    const color = document.getElementById('color');
+    color.addEventListener('change', e => setText('color-selected', e.target.value));
+
+    // 6: dynamically-loaded options (simulate API delay)
+    document.getElementById('district-dropdown').addEventListener('click', async () => {
+      const menu = document.getElementById('district-menu');
+      menu.innerHTML = '';
+      menu.classList.add('visible');
+      setText('district-selected', 'loading...');
+      // simulate network
+      await new Promise(r => setTimeout(r, 900));
+      ['Madurai','Coimbatore','Tiruchirappalli'].forEach(t => {
+        const li = document.createElement('li'); li.textContent = t; li.role = 'option'; menu.appendChild(li);
+      });
+    });
+    document.getElementById('district-menu').addEventListener('click', e => {
+      if (e.target && e.target.nodeName === 'LI') {
+        setText('district-selected', e.target.textContent);
+        e.currentTarget.classList.remove('visible');
+      }
+    });
+
+    // 7: ARIA combobox
+    const comb = document.getElementById('state-combobox');
+    const stateOptions = document.getElementById('state-options');
+    comb.addEventListener('click', () => {
+      const expanded = comb.getAttribute('aria-expanded') === 'true';
+      comb.setAttribute('aria-expanded', (!expanded).toString());
+      stateOptions.classList.toggle('visible');
+    });
+    stateOptions.addEventListener('click', e => {
+      if (e.target && e.target.nodeName === 'LI') {
+        setText('state-selected', e.target.textContent);
+        comb.setAttribute('aria-expanded','false');
+        stateOptions.classList.remove('visible');
+      }
+    });
+
+    // 8: searchable dropdown
+    const cities = ['Bengaluru','Chennai','Hyderabad','Pune','Delhi'];
+    const searchInput = document.getElementById('search-city');
+    const searchResults = document.getElementById('search-results');
+    searchInput.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      searchResults.innerHTML = '';
+      if (!q) { searchResults.classList.remove('visible'); return; }
+      cities.filter(c => c.toLowerCase().includes(q)).forEach(c => {
+        const li = document.createElement('li'); li.textContent = c; searchResults.appendChild(li);
+      });
+      searchResults.classList.add('visible');
+    });
+    searchResults.addEventListener('click', e => {
+      if (e.target && e.target.nodeName === 'LI') {
+        setText('search-selected', e.target.textContent);
+        searchResults.classList.remove('visible');
+        searchInput.value = '';
+      }
+    });
+
+    // 9: shadow DOM dropdown
+    const host = document.getElementById('shadow-host');
+    const shadowRoot = host.attachShadow({mode:'open'});
+    shadowRoot.innerHTML = `
+      <div style="padding:8px;border:1px solid #e2e8f0;border-radius:6px;min-width:200px;">Shadow Dropdown</div>
+      <ul id="shadow-menu" style="display:none;margin:8px 0;padding:0;list-style:none;border:1px solid #ddd;max-width:200px;">
+        <li>Shadow One</li>
+        <li>Shadow Two</li>
+      </ul>
+    `;
+    const shadowToggle = shadowRoot.querySelector('div');
+    const shadowMenu = shadowRoot.getElementById('shadow-menu');
+    shadowToggle.addEventListener('click', () => { shadowMenu.style.display = shadowMenu.style.display === 'block' ? 'none' : 'block'; });
+    shadowMenu.addEventListener('click', e => { if (e.target.nodeName === 'LI') { document.getElementById('shadow-selected').textContent = e.target.textContent; } });
+
+    // 10: i18n
+    document.getElementById('i18n').addEventListener('change', e => setText('i18n-selected', e.target.options[e.target.selectedIndex].text));
+
+    // 11: flaky menu (simulated click interception / occasional fail)
+    const flaky = document.getElementById('flaky-dropdown');
+    const flakyMenu = document.getElementById('flaky-menu');
+    flaky.addEventListener('click', () => {
+      // sometimes the menu doesn't open immediately to simulate flakiness
+      const rand = Math.random();
+      if (rand < 0.4) {
+        // delay open
+        setTimeout(() => flakyMenu.classList.add('visible'), 600);
+      } else {
+        flakyMenu.classList.add('visible');
+      }
+    });
+    flakyMenu.addEventListener('click', e => {
+      if (e.target.nodeName === 'LI') { setText('flaky-selected', e.target.textContent); flakyMenu.classList.remove('visible'); }
+    });
+
+    // 13: analytics simulation — append payload to log
+    const analytics = document.getElementById('analytics-dropdown');
+    const analyticsLog = document.getElementById('analytics-log');
+    analytics.addEventListener('change', e => {
+      const payload = { event:'select', value: e.target.value, ts: Date.now() };
+      document.getElementById('analytics-last').textContent = JSON.stringify(payload);
+      const el = document.createElement('div'); el.textContent = JSON.stringify(payload); analyticsLog.appendChild(el);
+    });
+
+    // 14: virtualized list (simple approach — create 1000 and lazy render by chunk)
+    const virtual = document.getElementById('virtual-list');
+    const VCOUNT = 1000;
+    let renderedTo = 0;
+    function renderChunk() {
+      const frag = document.createDocumentFragment();
+      for (let i = renderedTo; i < Math.min(VCOUNT, renderedTo + 40); i++) {
+        const d = document.createElement('div'); d.className='virtual-item'; d.textContent = 'Item #' + (i+1); d.dataset.index = i+1; frag.appendChild(d);
+      }
+      virtual.appendChild(frag);
+      renderedTo += 40;
+    }
+    renderChunk();
+    virtual.addEventListener('scroll', () => {
+      if (virtual.scrollTop + virtual.clientHeight >= virtual.scrollHeight - 10 && renderedTo < VCOUNT) renderChunk();
+    });
+    virtual.addEventListener('click', e => { if (e.target && e.target.dataset && e.target.dataset.index) setText('virtual-selected', e.target.textContent); });
+
+    // 15: delayed rendering
+    document.getElementById('delayed-trigger').addEventListener('click', () => {
+      const container = document.getElementById('delayed-container'); container.innerHTML = '';
+      // intentionally random delay 0.5s - 2s
+      const delay = 500 + Math.floor(Math.random()*1500);
+      setTimeout(() => {
+        const sel = document.createElement('select'); sel.id='delayed-dropdown';
+        ['One','Two','Three'].forEach(t => { const o = document.createElement('option'); o.textContent = t; sel.appendChild(o); });
+        container.appendChild(sel);
+        sel.addEventListener('change', e => setText('delayed-selected', e.target.value));
+      }, delay);
+    });
+
+    // helper: expose a small API for test verification if needed
+    window.__practiceHelpers = {
+      clickAndGetText: async function(selector) {
+        const el = document.querySelector(selector);
+        if (!el) throw new Error('not found');
+        el.click();
+        return el.textContent;
+      }
+    };
+  </script>
+</body>
+</html>
