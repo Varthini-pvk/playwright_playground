@@ -4,19 +4,18 @@ import path from 'path';
 
 test("To validate dropdown", async({page}) => 
 {
-// const practiceFile = path.resolve(__dirname, "../resources/playwright-dropdown-practice.html");
-await page.goto('https://leafground.com/select.xhtml')
-
+const practiceFile = path.resolve(__dirname, "../resources/playwright-dropdown-practice.html");
+await page.goto('file://' + practiceFile)
+await expect(page.url()).toContain("playwright-dropdown-practice.html")
 
 // //select a option 
-// const country_dropdown = page.locator('#country');
-const country_dropdown = page.locator('.ui-selectonemenu');
-// await country_dropdown.selectOption({value : "IN"});
-// await expect (country_dropdown).toHaveValue("IN");
-// await country_dropdown.selectOption({label : "United Kingdom"});
-// await expect (country_dropdown).toHaveValue("GB");
-// await country_dropdown.selectOption({index : 1});
-// await expect (country_dropdown).toHaveValue("US");
+const country_dropdown = page.locator('#country');
+await country_dropdown.selectOption({value : "IN"});
+await expect (country_dropdown).toHaveValue("IN");
+await country_dropdown.selectOption({label : "United Kingdom"});
+await expect (country_dropdown).toHaveValue("GB");
+await country_dropdown.selectOption({index : 1});
+await expect (country_dropdown).toHaveValue("US");
 console.log(`number of options:${await country_dropdown.count()}`)
 const text = await country_dropdown.nth(2).textContent();
 console.log(text);

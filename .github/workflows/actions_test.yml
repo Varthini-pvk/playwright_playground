@@ -1,0 +1,17 @@
+name: test_actions
+
+on:
+  push:
+    branches: [main]
+
+
+jobs:
+  print_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: print
+        run: echo "Hello GitHub Actions"
