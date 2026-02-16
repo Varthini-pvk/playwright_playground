@@ -1,3 +1,4 @@
+import { parse } from 'csv-parse/sync';
 export type UserProfile = {
         id: number;
         lastLogin: Date;
@@ -27,4 +28,11 @@ function extractUser (response:any): UserProfile
         lastLogin: new Date(response.lastLogin),
         balance: parseFloat(response.balance)
     };
+}
+
+
+export function loadCSV<T>(fileContent:string): T[]
+{
+    
+     return parse(fileContent, {columns:true});
 }
