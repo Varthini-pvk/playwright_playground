@@ -1,5 +1,21 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// #region agent log
+fetch('http://127.0.0.1:7872/ingest/c224b366-5c96-4e03-86f0-6eb731f3e856', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '702e36' },
+  body: JSON.stringify({
+    sessionId: '702e36',
+    runId: 'pre-fix',
+    hypothesisId: 'H1',
+    location: 'playwright.config.ts:1',
+    message: 'playwright config loaded',
+    data: { nodeVersion: process.version, cwd: process.cwd() },
+    timestamp: Date.now(),
+  }),
+}).catch(() => {});
+// #endregion
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -12,7 +28,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './tests/',
+  testMatch: ['**/*.spec.ts'],
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -32,7 +49,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  grep: /@smoke/,
+
 
   /* Configure projects for major browsers */
   projects: [

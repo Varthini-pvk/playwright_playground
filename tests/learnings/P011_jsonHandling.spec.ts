@@ -1,10 +1,10 @@
 import {test} from '@playwright/test';
 import {readFileSync} from 'fs';
-import {upload_path} from '../utilities/paths';
+import {upload_path} from '../../utilities/paths.js';
 import {resolve} from 'node:path';
-import {UserProfile,readResponse} from '../utilities/apiResponse';
-import {UserProfiles, readResponse_zod} from '../utilities/apiResponse_zod';
-import users from '../resources/sample-json.json' assert {type: 'json'};
+import {UserProfile,readResponse} from '../../utilities/apiResponse.js';
+import {UserProfiles, readResponse_zod} from '../../utilities/apiResponse_zod.js';
+import users from '../../resources/sample-json.json' with {type: 'json'};
 
 test ("To validate reading from JSON", async() => {
 
@@ -25,7 +25,7 @@ test("To validate response from JSON using zod", async() => {
 
 })
 
-test.only("To validate json import", async() => {
+test("To validate json import", async() => {
     type userProfile = {
         id: number,
         lastLogin: string,
@@ -34,5 +34,23 @@ test.only("To validate json import", async() => {
 
     const usersProfile = users as userProfile[];
     console.log(new Date(usersProfile[0].lastLogin).getFullYear());
+
+})
+
+//Data destructuring
+
+test("To test data destructuring of test data", async() => {
+
+type userProfile = {
+        id: number,
+        lastLogin: string,
+        balance: string
+    }
+ for (const user  of users)
+ { 
+    const {id, lastLogin, balance } = user 
+    console.log(new Date(lastLogin).getFullYear())
+}
+ 
 
 })

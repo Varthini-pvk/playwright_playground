@@ -1,14 +1,14 @@
-import {z, ZodTypeAny} from "zod";
+import {z, ZodType} from "zod";
 import { parse } from 'csv-parse/sync';
 
-const UserProfileSchenma = z.object({
-        id: z.number(),
-        lastLogin: z.iso.datetime().transform(d => new Date()),
+export const UserProfileSchenma = z.object({
+        id: z.coerce.number(),
+        lastLogin: z.iso.datetime(),
         balance: z.coerce.number(),
     })
 
 
-const UserProfilesSchema = z.array(UserProfileSchenma)
+export const UserProfilesSchema = z.array(UserProfileSchenma)
 
 export type UserProfiles = z.infer<typeof UserProfilesSchema>
 export type UserProfileZod = z.infer<typeof UserProfilesSchema>
@@ -28,9 +28,9 @@ export function readResponse_zod(response:string): UserProfiles
     }
 }
 
-export function loadCSVZod<S extends ZodTypeAny>(fileContent:string, schema:S): z.infer<S>[]
+export function loadCSVZod<S extends ZodType>(fileContent:string, schema:S):z.output<S>[]
 {
     
      return z.array(schema).parse(parse(fileContent, {columns:true}));
+   
 }
-
