@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "sd:test:qa": "cross-env TestEnv=qa playwright test tests/saucedemo",
-    "sd:test:dev": "cross-env TestEnv=dev playwright test tests/saucedemo"
+    "sd:test:dev": "cross-env TestEnv=dev playwright test tests/saucedemo",
+    "api:test:qa": "cross-env TestEnv=qa playwright test tests/api"
   },
   "keywords": [],
   "author": "",

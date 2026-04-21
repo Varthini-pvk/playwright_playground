@@ -1,16 +1,15 @@
-import { test,expect } from '@playwright/test';
-import { ApiClient, APIResponse } from "../../core/api/ApiClient.js";
+import { expect} from '@playwright/test';
+import { test } from '../fixtures/api.fixture.js';
+import { ApiClient } from "../../core/api/ApiClient.js";
 import { UserService } from '../../services/User.js'
 
 let userId: number | null = null;
 
-test("To validate get users", async({request}) => {
-
-    const api = new ApiClient(request);
-    const userServiceInstance = new UserService(api);
-    const page_number = 2;
-    const getResponse = await userServiceInstance.getUser(page_number)
+test("To validate get users", async({userService}) => {
+     const page_number = 2;
+    const getResponse = await userService.getUser(page_number)
     expect(getResponse.status).toBe(200);
+    expect(getResponse.body).not.toBeNull();
     expect(getResponse.body.page).toBe(page_number)
     expect(getResponse.body).toHaveProperty('data')
     expect(getResponse.body.data.length).toBeGreaterThanOrEqual(1)
@@ -31,10 +30,9 @@ test("To validate get users", async({request}) => {
 //     expect(response.status()).toBe(404);
 // })
 
-test ("To validate create user", async({request}) => {
+test ("To validate create user", async({userService}) => {
 
-    const api = new ApiClient(request);
-    const userServiceInstance = new UserService(api);
+   
     const request_payload = {
     name: "Varthini",
     skills: ["JS", "Playwright"],
@@ -42,9 +40,10 @@ test ("To validate create user", async({request}) => {
     experience: 3,  job:"sdet"
     }
    }
-   const response  = await userServiceInstance.createUser(request_payload);
+   const response  = await userService.createUser(request_payload);
 
     expect(response.status).toBe(201);
+    expect(response.body).not.toBeNull();
     expect(response.body.name).toBe(request_payload.name);
     expect(response.body.details?.job).toBe(request_payload.details.job);
     expect(response.body.id).toBeDefined();
@@ -52,10 +51,9 @@ test ("To validate create user", async({request}) => {
     userId = response.body.id;
 })
 
-test("To validate update user", async({request}) => {
+test("To validate update user", async({userService}) => {
 
-    const api = new ApiClient(request);
-    const userServiceInstance = new UserService(api);
+   
 
     const request_payload = {
     skills: ["JS", "Playwright", "AI"],
@@ -65,16 +63,15 @@ test("To validate update user", async({request}) => {
     }
     }
 
-    const response  = await userServiceInstance.updateUser(request_payload,userId);
+    const response  = await userService.updateUser(request_payload,userId);
     expect(response.status).toBe(200);
+    expect(response.body).not.toBeNull();
     expect(response.body.details?.job).toBe(request_payload.details.job); 
     expect(response.body.skills).toMatchObject(request_payload.skills); 
     expect(response.body.updatedAt).toBeDefined();
     })
 
-test("To validate delete user", async({request}) => {
-   const api = new ApiClient(request);
-    const userServiceInstance = new UserService(api);
-    const response  = await userServiceInstance.deleteUser(userId);
+test("To validate delete user", async({userService}) => {
+    const response  = await userService.deleteUser(userId);
     expect(response.status).toBe(204);
 })
