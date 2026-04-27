@@ -22,7 +22,7 @@ export class ApiClient{
     {
         if (isDebug) 
         {
-        console.log("👉 REQUEST");
+        console.log("REQUEST");
         console.log("URL:", url);
         console.log("Headers:", {
         ...options?.headers

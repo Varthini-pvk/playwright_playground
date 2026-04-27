@@ -43,7 +43,7 @@ test ("To validate create user", async({userService}) => {
    const response  = await userService.createUser(request_payload);
 
     expect(response.status).toBe(201);
-    expect(response.body).not.toBeNull();
+    // expect(response.body).not.toBeNull();
     expect(response.body.name).toBe(request_payload.name);
     expect(response.body.details?.job).toBe(request_payload.details.job);
     expect(response.body.id).toBeDefined();

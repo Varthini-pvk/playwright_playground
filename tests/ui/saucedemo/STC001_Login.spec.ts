@@ -1,5 +1,5 @@
     import {test, expect} from '@playwright/test';
-    import {accountConfig} from '../../../utilities/saucedemo/env.js';
+    import {accountConfig} from '../../../utilities/ui/saucedemo/env.js';
 
     test("To validate login", async ({page})=>{
         
