@@ -1,4 +1,5 @@
-import {test as base, APIRequestContext} from '@playwright/test';
+import {APIRequestContext} from '@playwright/test';
+import {test as base} from './data.fixture.js';
 import { ApiClient } from "../../core/api/ApiClient.js";
 import { UserService } from '../../services/User.js'
 import { api_key, isDebug } from '../../utilities/api/env.js';
@@ -20,7 +21,7 @@ type workerFixtures = {
 };
 
 
-export const test = base.extend<customFixtures,workerFixtures>
+export const apitest = base.extend<customFixtures,workerFixtures>
 ({
 
     baseheader: [async({},use) => {

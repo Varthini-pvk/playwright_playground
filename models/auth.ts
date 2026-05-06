@@ -6,3 +6,12 @@ export interface LoginResponse
     username: string;
     email: string;
 }
+
+export interface UserDetailsResponse {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    role: string;
+}

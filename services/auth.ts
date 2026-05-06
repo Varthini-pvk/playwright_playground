@@ -22,7 +22,7 @@ export class AuthService
 
     }
 
-    async buildAuthHeader(token:string)
+    buildAuthHeader(token:string)
     {
          return {...this.headers,
             Authorization: `Bearer ${token}`
@@ -33,6 +33,6 @@ export class AuthService
     {
         const url = `${endpoint}/auth/me`;
     
-        return this.api.get<UserDetailsResponse>(url, {headers: await this.buildAuthHeader(token)})
+        return this.api.get<UserDetailsResponse>(url, {headers: this.buildAuthHeader(token)})
     }
 }
