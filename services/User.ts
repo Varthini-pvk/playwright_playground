@@ -32,5 +32,8 @@ export class UserService{
         return this.api.delete<null>(`${url}/${userId}`,{headers: this.headers});
     }
 
-
+    async getUserCustomURL(path:string, params?: object) {
+        const url = `${test_uri}/${path}`
+        return this.api.get(url,{headers: this.headers, params: params});
+    }
 }

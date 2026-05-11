@@ -21,7 +21,7 @@ type workerFixtures = {
 };
 
 
-export const apitest = base.extend<customFixtures,workerFixtures>
+export const test = base.extend<customFixtures,workerFixtures>
 ({
 
     baseheader: [async({},use) => {
