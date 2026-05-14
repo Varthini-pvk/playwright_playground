@@ -1,17 +1,18 @@
 // fixtures for dynamic test data generation
 
 import {test as base} from './test.fixture.js';
-import { buildUser } from '../../utilities/common/dataBuilder.js'
+import { UserFactory } from '../../test_data/api/Factories/userDataFactory.js';
+import { User } from "../../models/users.js";
 
 type dataFixtures = {
-randomUser: ReturnType<typeof buildUser>
+createUser:(overrides?: Partial<User>) => User;
 
 }
 
 export const test = base.extend<dataFixtures>({
-   randomUser: async({},use) =>
+   createUser: async({},use) =>
    {
-     const user = buildUser();
+     const user = (overrides = {}) => UserFactory.createUser(overrides);
      await use(user);
   }
 });

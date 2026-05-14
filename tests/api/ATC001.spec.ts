@@ -32,29 +32,21 @@ test("To validate the error code for invalid path", async({userService}) => {
     expect(response.status).toBe(404);
 })
 
-test ("To validate create user", async({userService}) => {
+test.only("To validate create user", async({userService, createUser}) => {
 
-   
-    const request_payload = {
-    name: "Varthini",
-    skills: ["JS", "Playwright"],
-    details: {
-    experience: 3,  job:"sdet"
-    }
-   }
-   const response  = await userService.createUser(request_payload);
-
+    const adminUser = { ...createUser,role: "admin"}; 
+    const response  = await userService.createUser(adminUser);
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject({
-    ...request_payload,
+    ...adminUser,
     id: expect.any(String),
     createdAt: expect.any(String)
     });
 })
 
-test("To validate update user", async({userService,randomUser}) => {
+test("To validate update user", async({userService,createUser}) => {
 
-    const createresponse  = await userService.createUser(randomUser);
+    const createresponse  = await userService.createUser(createUser);
     expect(createresponse.body?.id).toBeDefined();
     const userId = Number(createresponse.body?.id);
 
@@ -77,8 +69,8 @@ test("To validate update user", async({userService,randomUser}) => {
     )
 })
 
-test("To validate delete user", async({userService,randomUser}) => {
-    const createresponse  = await userService.createUser(randomUser);
+test("To validate delete user", async({userService,createUser}) => {
+    const createresponse  = await userService.createUser(createUser);
     expect(createresponse.body?.id).toBeDefined();
     const userId = Number(createresponse.body?.id);
 

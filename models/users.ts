@@ -9,7 +9,12 @@ export interface User {
     experience?: number;
     job?: string;
   }
-  createdAt: string;
+  createdAt?: string;
+  skills?: string[];
+  role?: string;
+  password?:string;
+  active?:boolean;
+  country?:string;
 }
 
 export interface UsersResponse {
